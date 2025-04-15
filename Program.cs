@@ -1,92 +1,69 @@
 ﻿using System;
+using System.Collections.Generic;
 class Program
 {
 	static void Main()
 	{
 		Random random = new Random();
-		int secretNumber = 0;//объявляем эту переменную чтоб она была доступна везде не только в цикле if
-		int guess = 0;
-		int attempts = 0; // Начинаем считать попытки
-		List <int> records = new List<int>();
-		Console.WriteLine("Добро пожаловать в игру 'Угадай число'!");
-		Console.WriteLine("Выберите уровень сложности:");
-		Console.WriteLine("1 - Лёгкий (1-50)");
-		Console.WriteLine("2 - Средний (1-100)");
-		Console.WriteLine("3 - Сложный (1-500)");
-		Console.Write("Ваш выбор: ");
-		string input = Console.ReadLine();
-		if (int.TryParse(input, out int userChoice))
+		List<int> records = new List<int>();
+		while (true)
 		{
-			if (userChoice == 1)
+			int secretNumber = 0;
+			int guess = 0;
+			int attempts = 0;
+			Console.WriteLine("Welcome to the game ‘Guess the number'!");
+			Console.WriteLine("Select difficulty level:");
+			Console.WriteLine("1 - Easy (1-50)");
+			Console.WriteLine("2 - Medium (1-100)");
+			Console.WriteLine("3 - Difficult (1-500)");
+			Console.WriteLine("Your choice: ");
+			string input = Console.ReadLine();
+			if (int.TryParse(input, out int userChoice))
 			{
-				secretNumber = random.Next(1, 51);
-				Console.WriteLine("Я загадал число от 1 до 50. Попробуй угадать!");
+				if (userChoice == 1) secretNumber = random.Next(1, 51);
+				else if (userChoice == 2) secretNumber = random.Next(1, 101);
+				else if (userChoice == 3) secretNumber = random.Next(1, 501);
+				else secretNumber = random.Next(1, 101);
 			}
-			else if (userChoice == 2) //(когда условий достаточно можно их с else if, то есть вот так If -else if (сколько нужно)-else
+			else secretNumber = random.Next(1, 101);
+			while (guess != secretNumber && attempts < 10)
 			{
-				secretNumber = random.Next(1, 101);
-				Console.WriteLine("Я загадал число от 1 до 100. Попробуй угадать!");
-			}
-
-			else if (userChoice == 3)
-			{
-				secretNumber = random.Next(1, 501);
-				Console.WriteLine("Я загадал число от 1 до 500. Попробуй угадать!");
-			}
-			else //этот элс для цикла иф юзер чойс и покрывает проверку если пользователь ввел число но не 1 2 3 а 5 или 999
-			{
-				Console.WriteLine("Некорректный ввод. Выбран уровень сложности по умолчанию (Средний).");
-				secretNumber = random.Next(1, 101);
-			}
-		}
-		else //для всего большого цикла с трай парс тут мы проверяем если пользователь ввел вообще не число а буквы
-	    {
-			Console.WriteLine("Некорректный ввод. Выбран уровень сложности по умолчанию (Средний).");
-			secretNumber = random.Next(1, 101);
-		}
-
-		while (guess != secretNumber && attempts < 10)
-		{
-			Console.Write("Введите ваше предположение: ");
-			input = Console.ReadLine();
-
-			if (int.TryParse(input, out guess))
-			{
-				attempts++; // Увеличиваем счётчик попыток
-
-				if (guess < secretNumber)
+				Console.WriteLine("Enter your guess: ");
+				input = Console.ReadLine();
+				if (int.TryParse(input, out guess))
 				{
-					Console.WriteLine("Слишком мало!");
-				}
-				else if (guess > secretNumber)
-				{
-					Console.WriteLine("Слишком много!");
-				}
-				else
-				{
-					Console.WriteLine($"Поздравляю! Вы угадали число за {attempts} попыток!");
-					// Записываем рекорд, если он входит в топ-3 лучших
-					if (records.Count < 3 || ( records.Count > 0 && attempts < records[^1])) // два условия можно соеденять если взять другую проверку в скобки, проверка считать рекордс>0 чтоб если список будет пуск программа не выдала ошибку, (^1 — последний элемент списка Допустим, у нас есть список рекордов:List<int> records = new List<int> { 3, 5, 7 };Если новый результат attempts = 4, то:• records[^1] — это последний элемент списка, т.е. 7.• attempts < 7 — значит, 4 лучше, чем 7, поэтому его можно добавить.Так мы гарантируем, что только лучшие рекорды останутся в списке.)
+					attempts++;
+					if (guess < secretNumber) Console.WriteLine("Too low!");
+					else if (guess > secretNumber) Console.WriteLine("Too
+				   high!");
+				    else
 					{
-						records.Add(attempts);// В Add() можно передавать как число напрямую, так и переменную, содержащую число.
-						records.Sort(); // Сортируем от меньшего к большему
-						if (records.Count > 3)
+						Console.WriteLine($"Congratulations! You guessed the
+					   number in { attempts}
+						attempts!");
+ if (records.Count < 3 || attempts < records[^1])
 						{
-							records.RemoveAt(3); // Удаляем самый худший рекорд, если больше 3 записей этот метод удаляет по индексу соотв у нас с индексом 3 будет лишний рекорд с самым большим кол вом попыток
+							records.Add(attempts);
+							records.Sort();
+							if (records.Count > 3) records.RemoveAt(3);
 						}
+						Console.WriteLine($"Top records: {string.Join(", ",
+					   records)}");
+						break;
 					}
-
-					Console.WriteLine($"Лучшие рекорды: {string.Join(", ", records)}");// Метод string.Join(separator, collection) объединяет элементы списка в строку, разделяя их указанным символом.тут мы бделим запятыми однако помним что можно и через тире и тд string.Join("-", numbers); // "1-2-3"; string.Join(" | ", numbers); // "1 | 2 | 3"; string.Join("", numbers); // "123" (без разделителя))
-					return; // Выход из программы, если угадали завершение метода Main игра заканчивается
 				}
+				else Console.WriteLine("Please enter an integer");
 			}
-			else
+			if (guess != secretNumber)
+				Console.WriteLine($"You lost! The secret number was
+	   { secretNumber}.");
+	    Console.WriteLine("Do you want to play again? (yes/no): ");
+			string again = Console.ReadLine().ToLower();
+			if (again != "yes")
 			{
-				Console.WriteLine("Пожалуйста, введите целое число.");
+				Console.WriteLine("Thanks for playing!");
+				break;
 			}
 		}
-		// Если вышли из цикла, значит попытки закончились
-		Console.WriteLine($"Вы проиграли! Загаданное число было {secretNumber}.");
 	}
 }
-
