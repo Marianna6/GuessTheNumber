@@ -20,3 +20,4 @@ How to Run
 1. Clone the repository: https://github.com/Marianna6/GuessTheNumber.git
 2. Open the project in Visual Studio or any C# IDE.
 3. Run the project.
+Created with love for programming <3
