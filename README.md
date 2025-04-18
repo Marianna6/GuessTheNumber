@@ -1,6 +1,7 @@
-Guess the Number Game
+Guess the Number Game:
 A simple and fun console game written in C#. The user tries to guess a randomly generated number within a limited number of attempts. Includes multiple difficulty levels and a top-3 record system.
 Features
+
 - Three difficulty levels:
   - Easy (1–50)
   - Medium (1–100)
